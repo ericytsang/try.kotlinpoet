@@ -39,7 +39,8 @@ class VisitableProcessor : AbstractProcessor()
     {
         val className:ClassName get()
         {
-            return ClassName.bestGuess("$GENERATED_ELEMENT_PACKAGE_PREFIX.${wrappedValueType.asTypeName()}_UnionTypeElement")
+            val wrappedValueClassName = ClassName.bestGuess("$GENERATED_ELEMENT_PACKAGE_PREFIX.${wrappedValueType.asTypeName()}")
+            return ClassName.bestGuess("${wrappedValueClassName.packageName}.UnionTypeElement_${wrappedValueClassName.simpleName}")
         }
     }
     private data class UnionType(
@@ -55,7 +56,8 @@ class VisitableProcessor : AbstractProcessor()
         }
         fun className(processingEnvironment:ProcessingEnvironment):ClassName
         {
-            return ClassName.bestGuess("$GENERATED_ELEMENT_PACKAGE_PREFIX.${nameData.qualifiedName(processingEnvironment)}_UnionType")
+            val wrappedValueClassName = ClassName.bestGuess("$GENERATED_ELEMENT_PACKAGE_PREFIX.${nameData.qualifiedName(processingEnvironment)}")
+            return ClassName.bestGuess("${wrappedValueClassName.packageName}.UnionType_${wrappedValueClassName.simpleName}")
         }
     }
 
@@ -88,7 +90,7 @@ class VisitableProcessor : AbstractProcessor()
                                 .addTypeVariable(returnGenericType)
                                 .addParameter("visitor",it.parameterizedVisitorClassName(processingEnvironment))
                                 .returns(returnGenericType)
-                                .addStatement("return visitor.visit(this)")
+                                .addStatement("return visitor.visit(value)")
                                 .build()
                     })
                     .build()
@@ -116,7 +118,7 @@ class VisitableProcessor : AbstractProcessor()
                     .addType(TypeSpec.interfaceBuilder(unionType.visitorClassName(processingEnvironment))
                             .addTypeVariable(returnGenericType)
                             .addFunctions(elements
-                                    .map {it.unionTypeElement.className}
+                                    .map {it.unionTypeElement.wrappedValueType.asTypeName()}
                                     .map {FunSpec
                                             .builder("visit")
                                             .addModifiers(KModifier.ABSTRACT)

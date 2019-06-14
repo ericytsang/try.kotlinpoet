@@ -1,25 +1,28 @@
 package work.beltran.sample
 
-@Visitable(Hello::class,User::class,Int::class)
+import com.github.ericytsang.generated.work.beltran.sample.UnionTypeElement_Hello
+import com.github.ericytsang.generated.work.beltran.sample.UnionType_VisitMe
+
+@Visitable(Hello::class,User::class,Int::class,Double::class)
 class VisitMe
 
 @Visitable(Hello::class,Int::class)
 class VisitMeToo
 
-@GenName
 class Hello
 
-@Kson
-data class User(val name: String,
-                val email: String)
+data class User(
+        val name: String,
+        val email: String)
 
-fun main(args: Array<String>) {
-    println("Hello ${Generated_Hello().getName()}")
-    println("User to JSON")
-    val user = User(
-            name = "Test",
-            email = "test@email.com"
-    )
-    println("User: $user")
-    println("Json: ${user.toJson()}")
+fun main()
+{
+    val hello = UnionTypeElement_Hello(Hello())
+    hello.accept(object:UnionType_VisitMe.Visitor<Unit>
+    {
+        override fun visit(element:Hello) = println("Hello")
+        override fun visit(element:Int) = println("Int")
+        override fun visit(element:User) = println("User")
+        override fun visit(element:Double) = println("Double")
+    })
 }
