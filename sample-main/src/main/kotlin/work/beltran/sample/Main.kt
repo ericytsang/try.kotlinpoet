@@ -3,6 +3,9 @@ package work.beltran.sample
 @Visitable(Hello::class,User::class,Int::class)
 class VisitMe
 
+@Visitable(Hello::class,Int::class)
+class VisitMeToo
+
 @GenName
 class Hello
 
