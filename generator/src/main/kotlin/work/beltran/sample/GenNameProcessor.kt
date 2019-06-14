@@ -10,7 +10,7 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
 
 @AutoService(Processor::class)
-class Generator: AbstractProcessor() {
+class GenNameProcessor: AbstractProcessor() {
 
     override fun init(p0: ProcessingEnvironment) {
         super.init(p0)

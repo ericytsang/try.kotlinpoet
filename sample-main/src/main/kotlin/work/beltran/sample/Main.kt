@@ -1,5 +1,8 @@
 package work.beltran.sample
 
+//@Visitable(Hello::class,User::class,Int::class)
+//class VisitMe
+
 @GenName
 class Hello
 
