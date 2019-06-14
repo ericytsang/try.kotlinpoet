@@ -1,7 +1,7 @@
 package work.beltran.sample
 
-import com.github.ericytsang.generated.work.beltran.sample.UnionTypeElement_Hello
-import com.github.ericytsang.generated.work.beltran.sample.UnionType_VisitMe
+import com.github.ericytsang.generated.work.beltran.sample.UnionType_VisitMeToo
+import com.github.ericytsang.generated.work.beltran.sample.asUnionType
 
 @Visitable(Hello::class,User::class,Int::class,Double::class)
 class VisitMe
@@ -17,12 +17,10 @@ data class User(
 
 fun main()
 {
-    val hello = UnionTypeElement_Hello(Hello())
-    hello.accept(object:UnionType_VisitMe.Visitor<Unit>
+    val hello:UnionType_VisitMeToo = Hello().asUnionType()
+    hello.accept(object:UnionType_VisitMeToo.Visitor<Unit>
     {
         override fun visit(element:Hello) = println("Hello")
         override fun visit(element:Int) = println("Int")
-        override fun visit(element:User) = println("User")
-        override fun visit(element:Double) = println("Double")
     })
 }

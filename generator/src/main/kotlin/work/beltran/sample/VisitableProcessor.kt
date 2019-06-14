@@ -68,6 +68,16 @@ class VisitableProcessor : AbstractProcessor()
             val unionTypeElement:UnionTypeElement,
             val superTypes:Set<UnionType>)
     {
+        fun toFunSpec():FunSpec
+        {
+            return FunSpec
+                    .builder("asUnionType")
+                    .receiver(unionTypeElement.wrappedValueType.asTypeName())
+                    .returns(unionTypeElement.className)
+                    .addStatement("return ${unionTypeElement.className.simpleName}(this)")
+                    .build()
+        }
+
         fun toTypeSpec(processingEnvironment:ProcessingEnvironment):TypeSpec
         {
             return TypeSpec.classBuilder(unionTypeElement.className)
@@ -168,8 +178,7 @@ class VisitableProcessor : AbstractProcessor()
                             className.simpleName)
                     .addType(unionTypeVisitor.toTypeSpec(processingEnv))
                     .build()
-                    .writeTo(File(
-                            processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]))
+                    .writeTo(File(processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]))
         }
 
         unionTypeHierarchies.forEach()
@@ -180,10 +189,10 @@ class VisitableProcessor : AbstractProcessor()
                     .builder(
                             className.packageName,
                             className.simpleName)
+                    .addFunction(unionTypeElement.toFunSpec())
                     .addType(unionTypeElement.toTypeSpec(processingEnv))
                     .build()
-                    .writeTo(File(
-                            processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]))
+                    .writeTo(File(processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]))
         }
 
         return true
