@@ -1,4 +1,3 @@
-rootProject.name = 'kotlin-code-gen-sample'
 include 'generator'
 include 'sample-main'
 
